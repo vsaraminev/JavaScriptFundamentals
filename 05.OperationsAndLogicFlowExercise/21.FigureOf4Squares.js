@@ -36,5 +36,5 @@ function figureOf4Squares(number) {
     console.log(result);
 }
 
-figureOf4Squares(4);
-figureOf4Squares(6);
+figureOf4Squares(2);
+//figureOf4Squares(6);
