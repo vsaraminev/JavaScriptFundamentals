@@ -1,0 +1,182 @@
+function kompot(arr) {
+    let peachKg = 0;
+    let plumKg = 0;
+    let cherryKg = 0;
+    let fruitsForRakia = 0;
+    for (let line of arr) {
+        let [fruit, kg] = line.split(/\s+/gm);
+        switch (fruit) {
+            case "peach":
+                peachKg += +kg;
+                break;
+            case "plum":
+                plumKg += +kg;
+                break;
+            case "cherry":
+                cherryKg += +kg;
+                break;
+            default:
+                fruitsForRakia += +kg;
+                break;
+        }
+    }
+
+    let cherryKompots = Math.floor(((cherryKg * 1000) / 9) / 25);
+    let peachKompots = Math.floor(((peachKg * 1000) / 140) / 2.5);
+    let plumKompots = Math.floor(((plumKg * 1000) / 20) / 10);
+    let rakiaInLiters = fruitsForRakia * 0.2;
+
+    console.log(`Cherry kompots: ${cherryKompots}`);
+    console.log(`Peach kompots: ${peachKompots}`);
+    console.log(`Plum kompots: ${plumKompots}`);
+    console.log(`Rakiya liters: ${rakiaInLiters.toFixed(2)}`);
+
+
+function f1Race(arr) {
+    let pilots = arr.shift().split(' ');
+    for (let data of arr) {
+        let event = data.split(' ')[0];
+        let pilot = data.split(' ')[1];
+
+        switch (event) {
+            case "Join":
+                if (!pilots.includes(pilot)) {
+                    pilots.push(pilot);
+                }
+                break;
+            case "Crash":
+                if (pilots.includes(pilot)) {
+                    let index = pilots.indexOf(pilot);
+                    pilots.splice(index, 1);
+                }
+                break;
+            case "Pit":
+                if (pilots.includes(pilot)) {
+                    let index = pilots.indexOf(pilot);
+                    if (index !== pilots.length - 1) {
+                        pilots.splice(index, 1);
+                        pilots.splice(index + 1, 0, pilot)
+                    }
+                }
+                break;
+            case "Overtake":
+                if (pilots.includes(pilot)) {
+                    let index = pilots.indexOf(pilot);
+                    if (index !== 0) {
+                        pilots.splice(index, 1);
+                        pilots.splice(index - 1, 0, pilot)
+                    }
+                    break;
+
+                }
+        }
+    }
+    console.log(pilots.join(' ~ '));
+}
+
+
+
+
+function dna(inp) {
+    let entries = {};
+    let patt = /([a-z\!\@\#\$\?]+)=([\d]+)--([\d]+)<<([a-z]+)/;
+
+    for (let l of inp){
+        if (l=="Stop!"){
+            break;
+        }
+        let matches = l.match(patt);
+
+        if (matches){
+
+            let name = matches[1].replace(/([^a-z0-9]+)/gi, '');
+            if (name.length==  matches[2]) {
+
+                if(!entries.hasOwnProperty(matches[4])){
+                    entries[matches[4]]=  +matches[3];
+                }
+                else{
+                    entries[matches[4]]+=  +matches[3];
+                }
+            }
+        }
+
+    }
+    let sorted=[];
+
+    for(let e in entries){
+        sorted.push([e, entries[e]]);
+    }
+    sorted.sort((a,b)=>{
+     return b[1] - a[1]
+    });
+    sorted.forEach(x => console.log(`${x[0]} has genome size of ${x[1]}`));
+
+
+}
+
+}
+
+
+function championship(arr) {
+    let map=new Map();
+
+    for(let obj of arr){
+        let [teamName, pilotName, pilotPoints]=obj.split(' -> ');
+
+        if(!map.has(teamName)){
+            map.set(teamName, new Map())
+        }
+        if(!map.get(teamName).has(pilotName)){
+            map.get(teamName).set(pilotName,+pilotPoints)
+        }else{
+            map.get(teamName).set(pilotName, map.get(teamName)
+                .get(pilotName)+Number(pilotPoints))
+        }
+    }
+
+    let sortedMap=[...map].sort((a,b) => [...b[1].values()]
+        .reduce((a,b) => a+b) - [...a[1].values()].reduce((a,b) => a+b))
+        .slice(0,3);
+    for(let [team, pilot] of sortedMap){
+        console.log(`${team}: ${[...pilot.values()].reduce((a,b)=>a+b)}`);
+        let sortedPilots=[...pilot].sort((a,b)=>b[1]-a[1]);
+
+        for(let [pilot,points] of sortedPilots){
+            console.log(`-- ${pilot} -> ${points}`);
+        }
+    }
+    
+}
+
+function championship(arr) {
+    let book = {};
+    for (let element of arr) {
+        let tokens = element.split(' -> ');
+        let teamName = tokens[0];
+        let pilotName = tokens[1];
+        let pilotPoints = +tokens[2];
+
+        if (!book.hasOwnProperty(teamName)) {
+            book[teamName] = {
+                totalPoints: 0,
+                pilots: {}
+            };
+        }
+        if (!book[teamName]["pilots"].hasOwnProperty(pilotName)) {
+            book[teamName]["pilots"][pilotName] = 0;
+        }
+        book[teamName]["pilots"][pilotName] += pilotPoints;
+        book[teamName]["totalPoints"] += pilotPoints;
+    }
+let winners=Object.entries(book)
+    .sort((a,b) => b[1]["totalPoints"] - a[1]["totalPoints"]).slice(0,3);
+
+    for(let winnerTeam of winners){
+        console.log(`${winnerTeam[0]}: ${winnerTeam[1]["totalPoints"]}`);
+        let sortedPilots=Object.entries(winnerTeam[1]["pilots"]).sort((a,b)=> b[1]-a[1]);
+        for(let pilot of sortedPilots){
+            console.log(`-- ${pilot[0]} -> ${pilot[1]}`);
+        }
+    }
+}
